@@ -1,0 +1,76 @@
+---
+title: "COMPSCIX 415.2 Homework 1"
+author: "Lionel Armstrong"
+date: "February 5, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+My Github repository for my assignments can be found at this URL: https://github.com/lionelja/compscix-415-2-assignments/tree/master
+
+
+```{r load_packages, warning=FALSE, message=FALSE}
+library(mdsr) 
+library(tidyverse)
+```
+Chunk of R code to load WorldCities dataset
+
+
+```{r}
+data("WorldCities")
+```
+QUESTION 1: How many observations and variables are there in this data set? What are some of the variable names? Type up your answer in your document using complete sentences.
+
+ANSWER: There are 23,018 observations in the WorldCities dataset. Each observation has 10 variables. Some of the variable names in the WorldCities dataset are code, name, and country. The glimpse function executed below shows this fact.
+```{r}
+glimpse(WorldCities)
+```
+Extract the first two hundred rows from WorldCities
+```{r}
+WorldCities <- head(WorldCities, 200) # 200 rows
+```
+
+The quickest way to pull a column from a data.frame is to use $. 
+Pull unqique country from the two rows assigned to WorldCities
+
+```{r}
+country_col <- WorldCities$country
+unique(country_col)
+```
+
+QUESTION 2: There is a column called region in the data set. Can you extract this and show only the unique values? 
+
+Answer: Yes there is a column called region and here are the unique values.
+
+```{r}
+region_col <- WorldCities$region
+unique(region_col)
+```
+Homework asssignment 1 questions 1 and 2 completed.
+
+QUESTION 3: Can you extract and show the unique entries from the country column in WorldCities using one line of code and two %>% operators? 
+ANSWER:
+```{r}
+WorldCities %>% select(country) %>% unique()
+```
+Visualize it:
+Let's get an idea of the distribution of city populations using ggplot.
+```{r}
+WorldCities %>% ggplot(aes(x = population)) + geom_histogram()
+```
+QUESTION 4: Make one more histogram of the population and add a new x-label, a new ylabel, a new title (use ggtitle('my title')), and change the theme of the plot using theme_bw(). 
+
+ANSWER:
+```{r}
+WorldCities %>% ggplot(aes(x = population)) + geom_histogram() + xlab('City Population') +ylab('Country Count') + ggtitle('Country Population Histogram') +
+  theme_bw()
+```
+
+
+
+
+
+             Homewwork assignment 1 completed
