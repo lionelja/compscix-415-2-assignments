@@ -68,9 +68,3 @@ ANSWER:
 WorldCities %>% ggplot(aes(x = population)) + geom_histogram() + xlab('City Population') +ylab('Country Count') + ggtitle('Country Population Histogram') +
   theme_bw()
 ```
-
-
-
-
-
-             Homewwork assignment 1 completed
