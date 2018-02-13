@@ -1,0 +1,93 @@
+---
+title: "homework_2_armstrong_lionel"
+author: "Lionel Armstrong"
+date: "February 11, 2018"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+
+```{r load_packages, warning=FALSE, message=FALSE}
+library(mdsr) 
+library(tidyverse)
+```
+
+
+3.2.4 Exercises
+
+1.Run  ggplot(data = mpg) . What do you see?
+
+ANSWER: Creates a coordinate system that you can add layers to. The first argument of  ggplot()  is the dataset to use in the graph. So  ggplot(data = mpg) creates an empty graph.
+
+```{r}
+ggplot(data=mpg)
+```
+
+2.How many rows are in  mpg ? How many columns?
+ANSWER: Data set mpg has 234 rows and 11 columns. See glimpse below.
+
+```{r}
+glimpse(mpg)
+```
+
+
+
+3.What does the  drv  variable describe?
+
+ANSWER: The drv variable describes the wheel drive be it f for front wheel drive or r for rear wheel drive or 4 for 4wd
+```{r}
+?mpg
+```
+
+4.Make a scatterplot of  hwy  vs  cyl .
+ANSWER:
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = hwy, y = cyl))
+```
+
+
+5.What happens if you make a scatterplot of  class  vs  drv ? Why is the plot not useful?
+
+ANSWER: The scatterplot displays a point for every occurrence of the intersection of the drv values and the class values. The hidden summary data being the count of the number of intersections isn't shown on the scatterplot.
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = class, y = drv))
+```
+3.3.1 Exercises
+
+1.What’s gone wrong with this code? Why are the points not blue?
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = "blue"))
+  
+ANSWER: When color is used in the aesthectic mapping you are adding an variable cYou can addColo a third variable, like  class , to a two dimensional scatterplot by mapping it to an aesthetic. An aesthetic is a visual property of the objects in your plot. Aesthetics include things like the size, the shape, or the color of your points. You can display a point (like the one below) in different ways by changing the values of its aesthetic properties. Since we already use the word “value” to describe data, let’s use the word “level” to describe aesthetic properties. Here we change the levels of a point’s size, shape, and color to make the point small, triangular, or blue: 
+
+```{r}
+?ggplot
+```
+
+4.Take the first faceted plot in this section:
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 2)
+
+What are the advantages to using faceting instead of the colour aesthetic? What are the disadvantages? How might the balance change if you had a larger dataset?
+
+
+5.Read  ?facet_wrap . What does  nrow  do? What does  ncol  do? What other options control the layout of the individual panels? Why doesn’t  facet_grid()  have  nrow  and  ncol  argument?
+
+
+mpg 
+```
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
