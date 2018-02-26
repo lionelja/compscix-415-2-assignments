@@ -21,7 +21,10 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 
 
 **ANSWER:**
-
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point()
+```
 
 *2.What parameters to  geom_jitter()  control the amount of jittering?*
 
