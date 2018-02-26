@@ -296,11 +296,17 @@ The two graphs will look alike because the first graphs defined global aesthetic
 **3.7.1 Exercises**
  Section 3.7.1: #2 only
 
-2.What does  geom_col()  do? How is it different to  geom_bar() ?
+*2.What does  geom_col()  do? How is it different to  geom_bar() ?*
 
 **ANSWER:**
 
 The geom_col creates a bar chart for a multivariate variable comparison and the geom_bar creates a bar chart for univariate variable. 
+
+*1.Look at the data graphics at the following link: What is a Data Scientist. Please briefly critique the designer’s choices. What works? What doesn’t work? What would you have done differently?*
+
+**ANSWER:**
+
+The designer relies on donut charts which are rated similar to pie charts in usefulness. Several of the graphics detort the data by not being porportional in size to the numeric percentage represented.
 
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
 
