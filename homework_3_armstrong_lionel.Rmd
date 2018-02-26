@@ -1,5 +1,7 @@
 ---
 title: "R Notebook"
+author: "Lionel Armstrong"
+date: "February 26, 2018"
 output: html_notebook
 ---
 
@@ -21,8 +23,11 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 
 
 **ANSWER:**
+
+The two variables ploted are both continuous variable.  The relationship between the two isn't very meaningful. The plot can be improved by mapping a categorical variable to an aesthetic such as color = drv.
+
 ```{r}
-ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy, color=drv)) + 
   geom_point()
 ```
 
@@ -30,17 +35,57 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 
 **ANSWER:**
 
+The height and width parameters control the amount of jittering.
+
+```{r}
+?geom_jitter
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy, color=drv)) + 
+  geom_jitter(height = 40, width= 200)
+```
+
 *3.Compare and contrast  geom_jitter()  with  geom_count().*
 
 **ANSWER:**
 
+Jitter adds a small amount of variation to the location of each point to force the display of points that would otherwise be hidden because of overlapping values. The geom_count function counts the number of observations at each location and reflects the magnitude of the count by the size of the point.
+
+```{r}
+?geom_count
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_count()
+```
+
 *4.What’s the default position adjustment for  geom_boxplot() ? Create a visualisation of the  mpg  dataset that demonstrates it.*
+
+**ANSWER:**
+
+Position isn't useful for geom_boxplot.  The boxplot graphically displays the range of values of continuous variable, thus there are no overlapping points or bars. Specifying position has no impact on the boxplot position on the graph.
+
+
+```{r}
+?geom_boxplot
+ggplot(data = mpg) + 
+  geom_boxplot(mapping = aes(x = class, y=hwy, position="fill"))
+ggplot(data = mpg) + 
+  geom_boxplot(mapping = aes(x = class, y=hwy, position="dodge"))
+ggplot(data = mpg) + 
+  geom_boxplot(mapping = aes(x = class, y=hwy, position="jitter"))
+ggplot(data = mpg) + 
+  geom_boxplot(mapping = aes(x = class, y=hwy, position="identity"))
+```
 
 **3.9.1 Exercises**
 
 
 *2.What does  labs()  do? Read the documentation.*
 
+**ANSWER:**
+
+The labs() function allows for the specification of the x and y axis labels and well as title and subtitle.
+
+```{r}
+?labs
+```
 
 *4.What does the plot below tell you about the relationship between city and highway mpg? Why is  coord_fixed()  important? What does  geom_abline()  do?*
 
@@ -52,6 +97,30 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 
 **ANSWER:**
 
+The graph shows the cty and hwy variables move in unison. A increase in city mpg will aslo have an increase im highway mpg.
+
+The coord_fixed function set the ratio between the physical representation of data units on the axis. On this graph it is important because the y and x axis represent the units being display (.i.e mpg). This eliminates any distortion by having the same representation.
+
+The geom_abline adds a reference line of the y-intercept and slope to the plot.
+
+```{r}
+?geom_abline
+ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_point() + 
+  geom_abline()
+ 
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_abline() 
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_point() + 
+  geom_abline() 
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_point() + 
+  geom_abline() +
+  coord_fixed() 
+```
 **4.4 Practice**
 *1.Why does this code not work?*
 
@@ -63,6 +132,15 @@ Look carefully! (This may seem like an exercise in pointlessness, but training y
 
 **ANSWER:**
 
+The default class of a variable is character and the character value has to be enclosed in single quotes in assignment statement.
+
+```{r}
+my_variable <- '10'
+my_variable
+class(my_variable)
+r_rocks <- 2 ^ 3
+r_rocks
+```
 *2.Tweak each of the following R commands so that they run correctly:*
 
 library(tidyverse)
