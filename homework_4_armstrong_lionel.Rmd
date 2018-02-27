@@ -1,0 +1,171 @@
+---
+title: "R Notebook"
+author: "Lionel Armstrong"
+date: "February 26, 2018"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r load_packages, warning=FALSE, message=FALSE}
+library(mdsr) 
+library(tidyverse)
+library(dbplyr)
+library(nycflights13)
+```
+
+**5.6.7 Exercises**
+
+*5.Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about  flights %>% group_by(carrier, dest) %>% summarise(n()) )*
+
+**ANSWER:**
+
+
+
+```{r}
+ flights %>% group_by(carrier, dest) %>% summarise(n()) 
+
+```
+
+*6.What does the  sort  argument to  count()  do. When might you use it?*
+
+**ANSWER:**
+
+
+```{r}
+```
+**10.5 Exercises**
+
+*1.How can you tell if an object is a tibble? (Hint: try printing  mtcars , which is a regular data frame).*
+
+**ANSWER:**
+
+
+```{r}
+
+```
+*2.Compare and contrast the following operations on a  data.frame  and equivalent tibble. What is different? Why might the default data frame behaviours cause you frustration?*
+
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+*
+
+**ANSWER:**
+
+
+```{r}
+
+```
+*3.If you have the name of a variable stored in an object, e.g.  var <- "mpg" , how can you extract the reference variable from a tibble?*
+
+**ANSWER:**
+
+
+```{r}
+
+```
+*6.What option controls how many additional column names are printed at the footer of a tibble?*
+
+**ANSWER:**
+
+
+```{r}
+
+```
+
+**12.3.3 Exercises**
+
+*2. Why does this code fail?*
+
+table4a %>% 
+  gather(1999, 2000, key = "year", value = "cases")
+  
+ Error in combine_vars(vars, ind_list): Position must be between 0 and n >
+
+**ANSWER:**
+
+
+```{r}
+table4a %>% 
+  gather(1999, 2000, key = "year", value = "cases")
+
+```
+*3. 3.Why does spreading this tibble fail? How could you add a new column to fix the problem?*
+
+people <- tribble(
+  ~name,             ~key,    ~value,
+  #-----------------|--------|------
+  "Phillip Woods",   "age",       45,
+  "Phillip Woods",   "height",   186,
+  "Phillip Woods",   "age",       50,
+  "Jessica Cordero", "age",       37,
+  "Jessica Cordero", "height",   156
+)
+
+
+**ANSWER:**
+
+
+```{r}
+people <- tribble(
+  ~name,             ~key,    ~value,
+  #-----------------|--------|------
+  "Phillip Woods",   "age",       45,
+  "Phillip Woods",   "height",   186,
+  "Phillip Woods",   "age",       50,
+  "Jessica Cordero", "age",       37,
+  "Jessica Cordero", "height",   156
+)
+
+```
+*4. 4.Tidy the simple tibble below. Do you need to spread or gather it? What are the variables?*
+
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+
+**ANSWER:**
+
+
+```{r}
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+
+```
+**12.4.3 Exercises**
+
+*1. 1.What do the  extra  and  fill  arguments do in  separate() ? Experiment with the various options for the following two toy datasets.*
+
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% 
+  separate(x, c("one", "two", "three"))
+
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+  separate(x, c("one", "two", "three"))
+
+
+**ANSWER:**
+
+
+```{r}
+table4a %>% 
+  gather(1999, 2000, key = "year", value = "cases")
+
+```
+*2.Both  unite()  and  separate()  have a  remove  argument. What does it do? Why would you set it to  FALSE ?*
+
+**ANSWER:**
+
+```{r}
+table4a %>% 
+  gather(1999, 2000, key = "year", value = "cases")
+
+```
