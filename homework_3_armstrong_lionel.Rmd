@@ -9,9 +9,11 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
 
-```{r}
-library(mdsr)
+```{r load_packages, warning=FALSE, message=FALSE}
+library(mdsr) 
 library(tidyverse)
+library(dbplyr)
+library(nycflights13)
 ```
 
 **3.8.1 Exercises**
@@ -61,15 +63,14 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 
 Position isn't useful for geom_boxplot.  The boxplot graphically displays the range of values of continuous variable, thus there are no overlapping points or bars. Specifying position has no impact on the boxplot position on the graph.
 
+Help shows dodge is the default
+
 
 ```{r}
 ?geom_boxplot
+
 ggplot(data = mpg) + 
-  geom_boxplot(mapping = aes(x = class, y=hwy, position="fill"))
-ggplot(data = mpg) + 
-  geom_boxplot(mapping = aes(x = class, y=hwy, position="dodge"))
-ggplot(data = mpg) + 
-  geom_boxplot(mapping = aes(x = class, y=hwy, position="jitter"))
+  geom_boxplot(mapping = aes(x = class, y=hwy))
 ggplot(data = mpg) + 
   geom_boxplot(mapping = aes(x = class, y=hwy, position="identity"))
 ```
@@ -126,20 +127,19 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 
 my_variable <- 10
 my_varıable
-#> Error in eval(expr, envir, enclos): object 'my_varıable' not found
 
-Look carefully! (This may seem like an exercise in pointlessness, but training your brain to notice even the tiniest difference will pay off when programming.)
+*#> Error in eval(expr, envir, enclos): object 'my_varıable' not found
+
+*Look carefully! (This may seem like an exercise in pointlessness, but training your brain to notice even the tiniest difference will pay off when programming.)*
 
 **ANSWER:**
 
-The default class of a variable is character and the character value has to be enclosed in single quotes in assignment statement.
+The code does work. I was able to generate the error initially but after several modified executions it works. I'm unable generate the error.  Initially I thought the default class of a variable is character and the character value has to be enclosed in single quotes in assignment statement.
 
 ```{r}
-my_variable <- '10'
+my_variable <- 10
 my_variable
 class(my_variable)
-r_rocks <- 2 ^ 3
-r_rocks
 ```
 *2.Tweak each of the following R commands so that they run correctly:*
 
@@ -153,48 +153,106 @@ filter(diamond, carat > 3)
 
 **ANSWER:**
 
-**5.2.4 Exercises**
+```{r}
 
-1.Find all flights that
-  *1.Had an arrival delay of two or more hours*
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+filter(mpg, cyl == 8)
+
+filter(diamonds, carat > 3)
+
+```
+5.2.4 Exercises
+
+*Find all flights that*
+*1.Had an arrival delay of two or more hours*
   
-  **ANSWER:**
+   **ANSWER:**
   
-  *2.Flew to Houston ( IAH  or  HOU )*
+```{r}
+  TwoHourDelay <- flights %>% filter(arr_delay >= 120)
+  TwoHourDelay
+```
   
-  **ANSWER:**
+*2.Flew to Houston ( IAH  or  HOU )*
+  
+**ANSWER:**
+
+```{r}
+HoustonFlights <- flights %>% filter(dest %in% c('IAH', 'HOU'))
+HoustonFlights
+```
+'
   
   *3.Were operated by United, American, or Delta*
   
   **ANSWER:**
+```{r}
+SelectedOperator <- flights %>% filter(carrier == 'UA' | carrier == 'AA' | carrier == 'DL')
+SelectedOperator
+```
   
   *4.Departed in summer (July, August, and September)*
   
   **ANSWER:**
+```{r}
+DepartedSummer <- flights %>% filter(month >=7 & month <=9)
+DepartedSummer
+```
   
   *5.Arrived more than two hours late, but didn’t leave late*
   
   **ANSWER:**
+```{r}
+NoDelayArriveLateTwoHours <- flights %>% filter(arr_delay >120 & dep_delay == 0)
+NoDelayArriveLateTwoHours
+```
   
   *6.Were delayed by at least an hour, but made up over 30 minutes in flight*
   
   **ANSWER:**
+```{r}
+HourDelayMadeUp30Mins <- flights %>% filter(arr_delay <=30 & dep_delay >= 60)
+HourDelayMadeUp30Mins
+```
   
   *7.Departed between midnight and 6am (inclusive)*
   
   **ANSWER:**
+  
+```{r}
+Departed_MidNight_6AM <- flights %>% filter(dep_time >=0 & dep_time <= 600)
+Departed_MidNight_6AM
+```
 
 
 *2.Another useful dplyr filtering helper is  between() . What does it do? Can you use it to simplify the code needed to answer the previous challenges?*
 
+
+
 **ANSWER:**
+
+The between function allows filtering of a range of values. Yes this can simplify coding of "greater than and less than" logic.
+
+```{r}
+?filter
+Departed_MidNight_6AM <- flights %>% filter(between(dep_time,0,600))
+Departed_MidNight_6AM
+```
 
 *3.How many flights have a missing  dep_time ? What other variables are missing? What might these rows represent?*
 
 **ANSWER:**
 
-*4.Why is  NA ^ 0  not missing? Why is  NA | TRUE  not missing? Why is  FALSE & NA  not missing? Can you figure out the general rule? ( NA * *0  is a tricky* *counterexample!)*
+There are 8255 flights missing dep_time. These rows might represent cancelled flights.
 
+```{r}
+Missing_Dep_Time <- flights %>% filter(is.na(dep_time))
+Missing_Dep_Time
+```
+
+*4.Why is  NA ^ 0  not missing? Why is  NA | TRUE  not missing? Why is  FALSE & NA  not missing? Can you figure out the general rule? ( NA * *0  is a tricky* *counterexample!)*
 
 
 **5.4.1 Exercises**
@@ -203,9 +261,22 @@ filter(diamond, carat > 3)
 
 **ANSWER:**
 
+```{r}
+select(flights, dep_time, dep_delay,arr_time, arr_delay)
+select (flights,  -(year:day),-(sched_dep_time), -(sched_arr_time),-(carrier:time_hour))
+select (flights,  starts_with('dep'), starts_with('arr'))
+select (flights,  ends_with('time'), -(starts_with('sched')), -(air_time), -(time_hour), ends_with('delay'))
+```
+
 *2.What happens if you include the name of a variable multiple times in a  select()  call?*
 
 **ANSWER:**
+
+When a variableis included multiple times only one column is retuned by the select call.
+
+```{r}
+select(flights, dep_time, dep_time)
+```
 
 *3.What does the  one_of()  function do? Why might it be helpful in conjunction with this vector?*
 
@@ -213,11 +284,22 @@ vars <- c("year", "month", "day", "dep_delay", "arr_delay")
 
 **ANSWER:**
 
+The one_of function checks if one of a values in the vector of arguments is a variable of a data set. The vector can be used as the argument for the one_of function
+```{r}
+?one_of
+varslist <- c("year", "month", "day", "dep_delay", "arr_delay","nhffh")
+flights %>% select(one_of(varslist))
+```
+
 *4.Does the result of running the following code surprise you? How do the select helpers deal with case by default? How can you change that default?*
 
 select(flights, contains("TIME"))
 
 **ANSWER:**
+Yes, the results are a surprise. I expected no columns to be returned because of uppercase characters.ignore.case = TRUE is the default and coding ignore.case = FALSE changes the default.
 
-
+```{r}
+?select
+select(flights, contains("TIME"))
+```
 
