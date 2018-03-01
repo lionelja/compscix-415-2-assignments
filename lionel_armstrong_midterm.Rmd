@@ -10,10 +10,12 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-```{r}
-library (tidyverse)
+```{r load_packages, warning=FALSE, message=FALSE}
+library(mdsr) 
+library(tidyverse)
+library(dbplyr)
 ```
+
 
 ### RStudio and R Markdown (3 points)  
 
