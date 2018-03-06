@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(mdsr) 
 library(tidyverse)
 library(dbplyr)
+library(ggplot2)
 ```
 https://github.com/lionelja/compscix-415-2-assignments
 
@@ -94,44 +95,122 @@ The components of a vector must be all of the same type. When the character type
 
 *1.  Download the rail_trail.txt file from Canvas (in the Midterm Exam section here) and successfully import it into R. Prove that it was imported successfully by including your import code and taking a glimpse of the result.*  
 
-
+#####ANSWER:#####
+```{r}
+myfile='C:/Rdata/rail_trail.txt'
+my_data <- read_delim(file = myfile, delim='|')
+glimpse(my_data)
+```
 
 *2.  Export the file into an R-specific format and name it “rail_trail.rds”. Make sure you define the path correctly so that you know where it gets saved. Then reload the file. Include your export and import code and take another glimpse.*  
 
-#Visualization (6 points)  
+#####ANSWER:#####
+```{r}
+saveRDS(my_data, file='c:/RData/rail_trail.rds')
+rds_file='C:/Rdata/rail_trail.rds'
+my_rds_data <- readRDS ('C:/Rdata/rail_trail.rds')
+glimpse(my_rds_data)
+```
 
+#Visualization (6 points)  
 *1.  Critique this graphic: give only three examples of what is wrong with this graphic. Be concise.*  
+
+#####ANSWER:#####
+The bubble size is at the lower end of the spectum of good visual cues. The age deminsion is omitted for men and women graph.  The numeric values in the center of the buble isn't clear whether not it's an percentage for two reason (1) not labeled with %, (2) the total percentage value for a nomial deminsion such as sex should equal 100%.
 
 
 *2.  Reproduce this graphic using the diamonds data set.*  
 
+#####ANSWER:#####
+
+```{r}
+ggplot(data = diamonds, mapping = aes(y = carat, x = cut, fill= color)) +
+  xlab('CART OF DIAMONDS') + ylab('CUT OF DIAMONDS') + 
+  geom_boxplot(position = 'identity') +
+  coord_flip()
+```
+
+
 *3.  The previous graphic is not very useful. We can make it much more useful by changing one thing about it. Make the change and plot it again.*  
+
+#####ANSWER:#####
+
+```{r}
+ggplot(data = diamonds, mapping = aes(y = carat, x = cut, fill= color)) +
+  xlab('CART OF DIAMONDS') + ylab('CUT OF DIAMONDS') + 
+  geom_boxplot(position = 'identity') +
+  coord_flip() +
+   facet_wrap(~ color)
+```
 
 #Data munging and wrangling (6 points)  
 
 *1.  Is this data “tidy”? If yes, leave it alone and go to the next problem. If no, make it tidy. Note: this data set is called table2 and is available in the tidyverse package. It should be ready for you to use after you’ve loaded the tidyverse package.*  
 
+#####ANSWER:#####
 
+table2 is tidy.  Each row is a type of count for given year and each column has the same type of value in each row. 
+
+```{r}
+table2
+```
 
 *2.  Create a new column in the diamonds data set called price_per_carat that shows the price of each diamond per carat (hint: divide). Only show me the code, not the output.*  
 
+#####ANSWER:#####
+
+```{r}
+my_diamonds <- diamonds %>% mutate(price_per_carat = carat / price )
+```
 
 *3.  For each cut of diamond in the diamonds data set, how many diamonds, and what proportion, have a price > 10000 and a carat < 1.5? There are several ways to get to an answer, but your solution must use the data wrangling verbs from the tidyverse in order to get credit.*
 
     ◦Do the results make sense? Why?
     ◦Do we need to be wary of any of these numbers? Why?
 
+#####ANSWER:#####
 
+```{r}
+my_diamonds <- diamonds %>% mutate(price_per_carat = carat / price )
+```
 
 #EDA (6 points)  
 
 Take a look at the txhousing data set that is included with the ggplot2 package and answer these questions:
 
 *1.  During what time period is this data from?*  
+#####ANSWER:#####
+
+The txhousing data is from the time period beginning January 2001 and ending July 2015. 
+
+```{r}
+end_period <- txhousing %>% arrange(desc(year), desc(month))
+end_period
+begin_period <- txhousing %>% arrange(year, month)
+begin_period
+```
 
 *2.  How many cities are represented?* 
 
+#####ANSWER:#####
+
+There are forty-six cities represented in the txhousing data. 
+
+```{r}
+Q2_answer <- txhousing %>% summarize(num_cities = n_distinct(city, na.rm=TRUE))
+Q2_answer
+```
+
 *3.  Which city, month and year had the highest number of sales?*  
+
+#####ANSWER:#####
+
+The highest number of sales in txhousing data was recorded in July 2015 in the city of Houston. data. 
+
+```{r}
+maxsale <- txhousing %>% arrange(desc(sales))
+maxsale 
+```
 
 *4.  What kind of relationship do you think exists between the number of listings and the number of sales? Check your assumption and show your work.* 
 
