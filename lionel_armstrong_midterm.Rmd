@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, error= FALSE)
 ```
 ```{r load_packages, warning=FALSE, message=FALSE}
 library(mdsr) 
@@ -39,12 +39,12 @@ By now you’ve used at least five different packages from the tidyverse for plo
  Importing/exporting data -*
  
 #####ANSWER:#####
+
 The ggplot2 package is used for plotting data.
 The dplyr package is used for data mungung/wrangling.
 The tidyr package is used for reshaping data.
 The readr package is used for importing/exporting data.
 
- 
 *2.  Now can you name two functions that you’ve used from each package that you listed above for these tasks?*  
 
 Plotting -
@@ -53,17 +53,21 @@ Plotting -
  Importing/exporting data (note that readRDS and saveRDS are base R functions) -
 
 #####ANSWER:#####
+
 Two ggplot2 functions I've used are geom_smooth() and geom_bar().
 Two dplyr functions I've used are select() and filter().
 Two tidyr funtions I've used are gather() and spread().
 Two readr functions I've used are read_csv() and write_csv().
 
-#R Basics (1.5 points)    
+
+#R Basics (1.5 points)  
+
 
 *1.  Fix this code with the fewest number of changes possible so it works:*  
 My_data.name___is.too00ooLong! <- c( 1 , 2   , 3 )
 
 #####ANSWER:#####
+
 Underscores and periods are the only valid special characters in a variable. Removing the explanation point make the statement valid.
 
 ```{r}
@@ -74,6 +78,7 @@ My_data.name___is.too00ooLong <- c( 1 , 2   , 3 )
 my_string <- C('has', 'an', 'error', 'in', 'it')
 
 #####ANSWER:#####
+
 The components of a vector is designated with a capital "C" isn't valid. This should be a lower case "c".
 
 ```{r}
@@ -88,7 +93,9 @@ my_vector
  ## [1] "1" "2" "3" "4" "5"
  
 #####ANSWER:#####
-The components of a vector must be all of the same type. When the character type component '3' is encounter all components become charater type.
+
+The components of a vector must be all of the same type. When the character type component '3' is encounter all components become character type.
+
  
 #Data import/export (3 points)  
 
@@ -96,6 +103,7 @@ The components of a vector must be all of the same type. When the character type
 *1.  Download the rail_trail.txt file from Canvas (in the Midterm Exam section here) and successfully import it into R. Prove that it was imported successfully by including your import code and taking a glimpse of the result.*  
 
 #####ANSWER:#####
+
 ```{r}
 myfile='C:/Rdata/rail_trail.txt'
 my_data <- read_delim(file = myfile, delim='|')
@@ -105,6 +113,7 @@ glimpse(my_data)
 *2.  Export the file into an R-specific format and name it “rail_trail.rds”. Make sure you define the path correctly so that you know where it gets saved. Then reload the file. Include your export and import code and take another glimpse.*  
 
 #####ANSWER:#####
+
 ```{r}
 saveRDS(my_data, file='c:/RData/rail_trail.rds')
 rds_file='C:/Rdata/rail_trail.rds'
@@ -112,12 +121,15 @@ my_rds_data <- readRDS ('C:/Rdata/rail_trail.rds')
 glimpse(my_rds_data)
 ```
 
+
 #Visualization (6 points)  
+
+
 *1.  Critique this graphic: give only three examples of what is wrong with this graphic. Be concise.*  
 
-#####ANSWER:#####
-The bubble size is at the lower end of the spectum of good visual cues. The age deminsion is omitted for men and women graph.  The numeric values in the center of the buble isn't clear whether not it's an percentage for two reason (1) not labeled with %, (2) the total percentage value for a nomial deminsion such as sex should equal 100%.
+#####ANSWER:#####  
 
+The bubble size is at the lower end of the spectrum of good visual cues. The age dimension is omitted for men and women graph.  The numeric values in the center of the bubble isn't clear whether not it's an percentage for two reason (1) not labeled with %, (2) the total percentage value for a nominal dimension such as sex should equal 100%.
 
 *2.  Reproduce this graphic using the diamonds data set.*  
 
@@ -129,7 +141,6 @@ ggplot(data = diamonds, mapping = aes(y = carat, x = cut, fill= color)) +
   geom_boxplot(position = 'identity') +
   coord_flip()
 ```
-
 
 *3.  The previous graphic is not very useful. We can make it much more useful by changing one thing about it. Make the change and plot it again.*  
 
@@ -143,7 +154,9 @@ ggplot(data = diamonds, mapping = aes(y = carat, x = cut, fill= color)) +
    facet_wrap(~ color)
 ```
 
+
 #Data munging and wrangling (6 points)  
+
 
 *1.  Is this data “tidy”? If yes, leave it alone and go to the next problem. If no, make it tidy. Note: this data set is called table2 and is available in the tidyverse package. It should be ready for you to use after you’ve loaded the tidyverse package.*  
 
@@ -170,8 +183,22 @@ my_diamonds <- diamonds %>% mutate(price_per_carat = carat / price )
 
 #####ANSWER:#####
 
+Yes the results make sense because the two subsets have the same number of occurance and matching values in the cut variables.
+
+No need to be to be wary of the because the carat and cut varaibale in the diamonds data is never na.
+
+
 ```{r}
-my_diamonds <- diamonds %>% mutate(price_per_carat = carat / price )
+
+grouped_diamonds <- diamonds %>% group_by(cut) %>% summarise(cut_count= n())
+
+filtered_diamonds <- diamonds %>% filter(price > 10000, carat < 1.5) %>% 
+        group_by(cut) %>% summarise(filtered_count = n())
+
+diamonds_joined <- grouped_diamonds %>% inner_join(filtered_diamonds, by = c("cut" = "cut"))
+
+Q3_Answer <- diamonds_joined %>% 
+    mutate( filtered_proportion = filtered_count / cut_count)
 ```
 
 #EDA (6 points)  
@@ -179,6 +206,7 @@ my_diamonds <- diamonds %>% mutate(price_per_carat = carat / price )
 Take a look at the txhousing data set that is included with the ggplot2 package and answer these questions:
 
 *1.  During what time period is this data from?*  
+
 #####ANSWER:#####
 
 The txhousing data is from the time period beginning January 2001 and ending July 2015. 
@@ -209,25 +237,56 @@ The highest number of sales in txhousing data was recorded in July 2015 in the c
 
 ```{r}
 maxsale <- txhousing %>% arrange(desc(sales))
-maxsale 
+maxsale
 ```
 
 *4.  What kind of relationship do you think exists between the number of listings and the number of sales? Check your assumption and show your work.* 
 
+#####ANSWER:#####
+
+The relationship between the number of listings and the number of sales is a positive correlation. 
+
+```{r}
+ggplot(data = txhousing) + 
+  geom_point(mapping = aes(x = listings, y = sales))
+
+```
+
+
 *5.  What proportion of sales is missing for each city?*  
+
+#####ANSWER:#####
+
+Not elegant, a little brut force but the correct answer. 
+
+```{r}
+by_city <- group_by(txhousing,city)
+summarise(by_city,
+  sales_count = n()) %>% mutate(sales_count)
+
+by_city2 <- filter(txhousing,!is.na(sales)) %>% group_by(city)
+summarise (by_city2, count2= n(), missing_sales = 187 - count2, prop_missing = missing_sales / count2)
+
+```
+
 
 *6.  Looking at only the cities and months with greater than 500 sales: ◦Are the distributions of the median sales price (column name median), when grouped by city, different? The same? Show your work.*
    ◦Any cities that stand out that you’d want to investigate further?
    ◦Why might we want to filter out all cities and months with sales less than 500?
 
+#####ANSWER:#####
+
+
+```{r}
+
+sales_gt_500 <- filter(txhousing,sales > 500)
+sales_gt_500
+
+Q6_answer <- sales_gt_500 %>% group_by(city)
+Q6_answer
+```
+
 #Git and Github (1.5 points)  
 
+
 *To demonstrate your use of git and Github, at the top of your document put a hyperlink to your Github repository.*
-
-Once you are finished with your midterm, commit your final changes with the comment “finished the midterm - woohoo” and push your R Markdown file and your html or pdf file to Github.
-
-
-
-
-
-
