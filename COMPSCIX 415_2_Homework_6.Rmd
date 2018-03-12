@@ -1,5 +1,5 @@
 ---
-title: "COMPSCIX 415.2 Homework 6"
+title: "Homework6"
 author: "Lionel Armstrong"
 date: "March 11, 2018"
 output: html_document
@@ -96,5 +96,4 @@ mean_samp <- tibble(mean_samp)
 8.According to the Central Limit Theorem, the mean of your sampling distribution should be very close to 2, and the standard deviation of your sampling distribution should be close to σn − −  √  =230 − −  √  =0.365 
 σn=230=0.365
 . Repeat #4-#6, but now with a sample of size n = 300 instead. Do your results match up well with the theorem?
-
 
