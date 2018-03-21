@@ -1,0 +1,205 @@
+---
+title: "COMPSCIX 415.2 Homework 7"
+author: "Lionel Armstrong"
+date: "March 18, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_packages, warning=FALSE, message=FALSE}
+library(mdsr) 
+library(tidyverse)
+library(broom)
+library(dbplyr)
+library(ggplot2)
+library(mosaicData)
+library(plyr)
+library(dplyr)
+library(gridExtra)
+library(scales)
+```
+
+#Exercise 1#
+Load the train.csv dataset into R. How many observations and columns are there?
+```{r message=FALSE,message==FALSE}
+train_data <- read_csv('C:/Rdata/train.csv')
+```
+#####ANSWER####
+
+Observations: 1,460
+Variables: 81
+
+#Exercise 2#
+
+*Normally at this point you would spend a few days on EDA, but for this homework we will get right to ﬁtting some linear regression models. Our ﬁrst step is to randomly split the data into train and test datasets. We will use a 70/30 split. There is an R package that will do the split for you, but let’s get some more practice with R and do it ourselves by ﬁlling in the blanks in the code below.* 
+
+#####ANSWER#####
+
+```{r message=FALSE,warning=FALSE}
+# load packages library(tidyverse) library(broom)
+# When taking a random sample, it is often useful to set a seed # so that your work is reproducible. Setting a seed will  
+# guarantee that the same random sample will be generated every # time, so long as you always set the same seed beforehand.  
+
+set.seed(29283)
+
+# This data already has an Id column which we can make use of.
+
+# Let's create our training set using sample_frac. Fill in the #blank. 
+
+train_set <- train_data %>% sample_frac(.70,replace=FALSE)
+train_set
+
+# let's create our testing set using the Id column. Fill in the # blanks. 
+
+test_set <- train_data %>% filter(!(Id%in% train_set$Id))
+```
+
+#Exercise 3#
+
+*Our target is called SalePrice. First, we can ﬁt a simple regression model consisting of only the intercept (the average of SalePrice). Fit the model and then use the broom package to*
+ *• take a look at the coeﬃcient*
+ *• compare the coeﬃcient to the average value of SalePrice*
+ *• take a look at the R-squared. Use the code below and ﬁll in     the blanks* 
+
+#####ANSWER#####
+
+```{r}
+# Fit a model with intercept only
+
+mod_0 <- lm(SalePrice ~ 1, data = train_set)
+tidy(mod_0)
+
+```
+
+# Double-check that the average SalePrice is equal to our  model's coefficient 
+
+#####ANSWER#####
+
+```{r}
+train_mean_SalePrice <-mean(train_set$SalePrice)
+tidy(train_mean_SalePrice)
+```
+
+# Check the R-squared 
+
+#####ANSWER#####
+
+```{r}
+glance(mod_0)
+```
+
+#Exercise 4#
+
+*Now ﬁt a linear regression model using GrLivArea, OverallQual, and Neighborhood as the features. Don’t forget to look at data_description.txt to understand what these variables mean. Ask yourself these questions before ﬁtting the model:*
+
+ *• What kind of relationship will these features have with our target?* 
+ 
+#####ANSWER#####
+
+The features had a negative impact shown by the -45017.87483 coefficient at the y intercept while average Sales Price at the y intercept is 182176.
+ 
+ *• Can the relationship be estimated linearly?*
+ 
+#####ANSWER#####
+
+Yes, Sales Price is numeric and function of the features. 
+ 
+Data Descriptors:
+*Neighborhood: Physical locations within Ames city limits* *OverallQual: Rates the overall material and finish of the house*
+*GrLivArea: Above grade (ground) living area square feet*
+ 
+#####ANSWER#####
+
+```{r}
+ three_freatures_lm <- lm(SalePrice ~ GrLivArea + OverallQual + Neighborhood, data = train_set) 
+``` 
+
+*• Are these good features, given the problem we are trying to solve?* 
+
+#####ANSWER#####
+
+Neighborhood is a good predictor of Sales Price. Changes in Gross Living Space and Overall Quality has little effect on Sale Price.
+
+*After ﬁtting the model, output the coeﬃcients and the R-squared using the broom package.*
+
+#####ANSWER#####
+
+```{r}
+ tidy(three_freatures_lm)
+ glance(three_freatures_lm)
+``` 
+
+*Answer these questions:* 
+ *• How would you interpret the coeﬃcients on GrLivArea and OverallQual?* 
+  *• Are the features signiﬁcant?*
+  *• Are the features practically signiﬁcant? *
+  *• Is the model a good ﬁt (to the training set)?*
+  
+#####ANSWER#####
+
+The GrLivArea (63) and OverallQual(21692) coefficients aren't high contributor to the mean Sale Price of the training set.These are not significant features. RSquare value of .805 is an indication of a good fit to the training set.
+
+#Exercise 5#
+
+*Evaluate the model on test_set using the root mean* *squared error (RMSE). Use the predict function to* *get the model predictions for the testing set.*
+ 
+*Recall that RMSE is the square root of the mean of the squared errors:* 
+
+*Hint: use the sqrt() and mean() functions:* 
+
+#####ANSWER#####
+```{r} 
+
+test_predictions <- predict(three_freatures_lm, newdata = test_set) 
+
+rmse <- sqrt(mean((test_set$SalePrice - test_predictions)^2))
+rmse
+```
+
+#Exercise 6 (OPTIONAL - won’t be graded)#
+
+*Feel free to play around with linear regression. Add some other features and see how the model results change. Test the model on test_set to compare the RMSE’s*.
+
+#Exercise 7#
+
+*One downside of the linear model is that it is sensitive to unusual values because the distance incorporates a squared term.*
+
+*Fit a linear model to the simulated data below, and visualise the results. Rerun a few times to generate diﬀerent simulated datasets.* 
+
+*What do you notice about the model?*
+
+#####ANSWER#####
+
+The model responds in the same manner reguardless of the smaple applied to the model. The model has a high bias and low variance.
+
+```{r}
+
+sim1a_1 <- tibble( 
+  x = rep(1:10, each = 3),
+  y = x **1.5 + 6 + rt(length(x), df = 2) )
+
+sim1a_2 <- tibble( 
+  x = rep(1:10, each = 3),
+  y = x **1.5 + 6 + rt(length(x), df = 2) )
+
+sim1a_3 <- tibble( 
+  x = rep(1:10, each = 3),
+  y = x **1.5 + 6 + rt(length(x), df = 2) )
+
+
+sim1a_1 %>% ggplot(aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth()
+
+sim1a_2 %>% ggplot(aes(x = x, y = y)) +
+   geom_point() +
+   geom_smooth()
+
+sim1a_3 %>% ggplot(aes(x = x, y = y)) +
+   geom_point() +
+   geom_smooth() 
+```
+

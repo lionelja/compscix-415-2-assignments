@@ -149,13 +149,13 @@ library(ggplot2)</code></pre>
 </div>
 <div id="the-tidyverse-packages-3-points" class="section level1">
 <h1>The tidyverse packages (3 points)</h1>
-<p>By now you’ve used at least five different packages from the tidyverse for plotting, data munging, reshaping data, importing/exporting data, and using tibbles (the tibble package is used for this without you even realizing it’s there).</p>
+<p>By now youâve used at least five different packages from the tidyverse for plotting, data munging, reshaping data, importing/exporting data, and using tibbles (the tibble package is used for this without you even realizing itâs there).</p>
 <p><em>1. Can you name which package is associated with each task below?</em></p>
 <p>Plotting - Data munging/wrangling - Reshaping (speading and gathering) data - Importing/exporting data -*</p>
 <div id="answer" class="section level5">
 <h5>ANSWER:</h5>
 <p>The ggplot2 package is used for plotting data. The dplyr package is used for data mungung/wrangling. The tidyr package is used for reshaping data. The readr package is used for importing/exporting data.</p>
-<p><em>2. Now can you name two functions that you’ve used from each package that you listed above for these tasks?</em></p>
+<p><em>2. Now can you name two functions that youâve used from each package that you listed above for these tasks?</em></p>
 <p>Plotting - Data munging/wrangling - Reshaping data - Importing/exporting data (note that readRDS and saveRDS are base R functions) -</p>
 </div>
 <div id="answer-1" class="section level5">
@@ -219,7 +219,7 @@ my_data &lt;- read_delim(file = myfile, delim='|')</code></pre>
 ## $ precip     &lt;dbl&gt; 0.00, 0.29, 0.32, 0.00, 0.14, 0.02, 0.00, 0.00, 0.0...
 ## $ volume     &lt;int&gt; 501, 419, 397, 385, 200, 375, 417, 629, 533, 547, 4...
 ## $ weekday    &lt;int&gt; 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, ...</code></pre>
-<p><em>2. Export the file into an R-specific format and name it “rail_trail.rds”. Make sure you define the path correctly so that you know where it gets saved. Then reload the file. Include your export and import code and take another glimpse.</em></p>
+<p><em>2. Export the file into an R-specific format and name it ârail_trail.rdsâ. Make sure you define the path correctly so that you know where it gets saved. Then reload the file. Include your export and import code and take another glimpse.</em></p>
 </div>
 <div id="answer-6" class="section level5">
 <h5>ANSWER:</h5>
@@ -270,7 +270,7 @@ glimpse(my_rds_data)</code></pre>
 </div>
 <div id="data-munging-and-wrangling-6-points" class="section level1">
 <h1>Data munging and wrangling (6 points)</h1>
-<p><em>1. Is this data “tidy”? If yes, leave it alone and go to the next problem. If no, make it tidy. Note: this data set is called table2 and is available in the tidyverse package. It should be ready for you to use after you’ve loaded the tidyverse package.</em></p>
+<p><em>1. Is this data âtidyâ? If yes, leave it alone and go to the next problem. If no, make it tidy. Note: this data set is called table2 and is available in the tidyverse package. It should be ready for you to use after youâve loaded the tidyverse package.</em></p>
 <div id="answer-10" class="section level5">
 <h5>ANSWER:</h5>
 <p>table2 is tidy. Each row is a type of count for given year and each column has the same type of value in each row.</p>
@@ -296,8 +296,8 @@ glimpse(my_rds_data)</code></pre>
 <h5>ANSWER:</h5>
 <pre class="r"><code>my_diamonds &lt;- diamonds %&gt;% mutate(price_per_carat = carat / price )</code></pre>
 <p><em>3. For each cut of diamond in the diamonds data set, how many diamonds, and what proportion, have a price &gt; 10000 and a carat &lt; 1.5? There are several ways to get to an answer, but your solution must use the data wrangling verbs from the tidyverse in order to get credit.</em></p>
-<pre><code>◦Do the results make sense? Why?
-◦Do we need to be wary of any of these numbers? Why?</code></pre>
+<pre><code>â¦Do the results make sense? Why?
+â¦Do we need to be wary of any of these numbers? Why?</code></pre>
 </div>
 <div id="answer-12" class="section level5">
 <h5>ANSWER:</h5>
@@ -431,7 +431,7 @@ Q_7_5_Answer</code></pre>
 ##  9 Bryan-Col~         187               187             0           0     
 ## 10 Collin Co~         187               187             0           0     
 ## # ... with 36 more rows</code></pre>
-<p><em>6. Looking at only the cities and months with greater than 500 sales: ◦Are the distributions of the median sales price (column name median), when grouped by city, different? The same? Show your work.</em> ◦Any cities that stand out that you’d want to investigate further? ◦Why might we want to filter out all cities and months with sales less than 500?</p>
+<p><em>6. Looking at only the cities and months with greater than 500 sales: â¦Are the distributions of the median sales price (column name median), when grouped by city, different? The same? Show your work.</em> â¦Any cities that stand out that youâd want to investigate further? â¦Why might we want to filter out all cities and months with sales less than 500?</p>
 </div>
 <div id="answer-18" class="section level5">
 <h5>ANSWER:</h5>

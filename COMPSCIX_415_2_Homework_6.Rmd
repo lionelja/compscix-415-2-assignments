@@ -1,0 +1,124 @@
+---
+title: "Homework6"
+author: "Lionel Armstrong"
+date: "March 11, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_packages, warning=FALSE, message=FALSE}
+library(mdsr) 
+library(tidyverse)
+library(dbplyr)
+library(ggplot2)
+library(mosaicData)
+```
+
+#Exercise 1
+
+Load the Whickham dataset (data(Whickham)). You will need to load the mosaicData package first, but I also included the data as an rds file on Canvas if you would rather download it there and load it with readRDS().
+
+Look at the help file on this dataset to learn a bit about it.
+
+```{r eval=FALSE}
+?Whickham
+```
+
+*1.What variables are in this data set?*
+
+#####ANSWER:#####
+
+The Whickham dataset has three variables: outcome, smoker, and age.
+
+*2.How many observations are there and what does each represent?*
+
+#####ANSWER:#####
+
+The Whickham dataset has 1314 observations. The dataset contains a subset of the survey sample: women who were classified as current smokers or as never having smoked. The data were synthesized from the summary description tables given in the Appleton et al al paper.Each observation 
+
+*3.Create a table (use the R code below as a guide) and a visualization of the relationship between smoking status and outcome, ignoring age. What do you see? Does it make sense?*
+
+#####ANSWER:#####
+
+The y axis shows the the two values of "Dead" and "Alive" on the y axis and the two values "No" and "Y" on the x axis. The visualization does not make sense.
+
+```{r}
+Whickham %>%count(~smoker,data =.)
+
+Whickham %>% ggplot(aes(x = smoker, y = outcome)) +geom_point()
+```
+
+*4.Recode the age variable into an ordered factor with three categories: age <= 44, age > 44 & age <= 64, and age > 64. Now, recreate visualization from above, but facet on your new age factor. What do you see? Does it make sense?*
+
+#####ANSWER:#####
+
+```{r}
+Whickham_2 <- Whickham %>% mutate(age_fct = 
+                       factor(case_when(age <= 44 ~ 'LTET44',
+                                  age > 44 & age <= 64 ~'BTW44-64',                                       age > 64 ~ 'GT64'), 
+                              levels = c('LTET44', 'BTW44-64', 'GT64')))
+
+Whickham_2 %>% ggplot(aes(x = smoker, y = outcome)) +
+  geom_boxplot() +
+  facet_wrap(~age_fct)
+```
+
+
+#Exercise 2
+
+The Central Limit Theorem states that the sampling distribution of sample means is approximately Normal, regardless of the distribution of your population. For this exercise our population distribution will be a Gamma(1,2) distribution, and we’ll show that the sampling distribution of the mean is in fact normally distributed.
+
+*1.Generate a random sample of size n = 10000 from a gamma(1,2) distribution and plot a histogram or density curve. Use the code below to help you get your sample.*
+
+```{r}
+library(tidyverse)
+n <- 10000
+gamma_samp <- tibble(x = rgamma(n, shape = 1, scale = 2))
+
+gamma_samp %>% sample_n(10000) %>% ggplot() +
+  geom_histogram(aes(x = ), bindwidth = 10) + 
+  theme_bw()
+glimpse(gamma_samp)
+```
+
+
+# look at ?rgamma to read about this function
+gamma_samp <- tibble(x = rgamma(n, shape = 1, scale = 2))
+
+*2.What is the mean and standard deviation of your sample? They should both be close to 2 because for a gamma distribution:*
+
+mean = shape x scale
+ variance = shape x scale^2
+mean_samp <- gamma_samp %>% .[['x']] %>% mean()
+
+*3.Pretend the distribution of our population of data looks like the plot above. Now take a sample of size n = 30 from a Gamma(1,2) distribution, plot the histogram or density curve, and calculate the mean and standard deviation.*
+
+
+*4.Take a sample of size n = 30, again from the Gamma(1,2) distribution, calculate the mean, and assign it to a vector named mean_samp. Repeat this 10000 times!!!! The code below might help.*
+
+# create a vector with 10000 NAs
+mean_samp <- rep(NA, 10000)
+
+# start a loop
+for(i in 1:10000) {
+  g_samp <- rgamma(30, shape = 1, scale = 2)
+  mean_samp[i] <- mean(g_samp)
+}
+# Convert vector to a tibble
+mean_samp <- tibble(mean_samp)
+
+*5.Make a histogram of your collection of means from above (mean_samp).*
+
+
+*6.Calculate the mean and standard deviation of all of your sample means.*
+
+
+*7.Did anything surprise you about your answers to #6?*
+
+  
+* 8.According to the Central Limit Theorem, the mean of your sampling distribution should be very close to 2, and the standard deviation of your sampling distribution should be close to σn − −  √  =230 − −  √  =0.365 
+σn=230=0.365. Repeat #4-#6, but now with a sample of size n = 300 instead. Do your results match up well with the theorem? *
+

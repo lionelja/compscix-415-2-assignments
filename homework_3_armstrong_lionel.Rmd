@@ -16,9 +16,9 @@ library(dbplyr)
 library(nycflights13)
 ```
 
-**3.8.1 Exercises**
+#3.8.1 Exercises
 
-*1.What is the problem with this plot? How could you improve it?*
+##1.What is the problem with this plot? How could you improve it?*
 
 ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
   geom_point()
@@ -33,7 +33,7 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy, color=drv)) +
   geom_point()
 ```
 
-*2.What parameters to  geom_jitter()  control the amount of jittering?*
+##2.What parameters to  geom_jitter()  control the amount of jittering?*
 
 **ANSWER:**
 
@@ -302,4 +302,3 @@ Yes, the results are a surprise. I expected no columns to be returned because of
 ?select
 select(flights, contains("TIME"))
 ```
-
