@@ -310,6 +310,7 @@ filtered_diamonds &lt;- diamonds %&gt;% filter(price &gt; 10000, carat &lt; 1.5)
 
 diamonds_joined &lt;- grouped_diamonds %&gt;% inner_join(filtered_diamonds, by = c(&quot;cut&quot; = &quot;cut&quot;))
 
+<<<<<<< HEAD
 Q_6_3_Answer &lt;- diamonds_joined %&gt;% 
     mutate( filtered_proportion = filtered_count / cut_count)
 Q_6_3_Answer</code></pre>
@@ -321,6 +322,10 @@ Q_6_3_Answer</code></pre>
 ## 3 Very Good     12082            155             0.0128 
 ## 4 Premium       13791            173             0.0125 
 ## 5 Ideal         21551            485             0.0225</code></pre>
+=======
+Q3_Answer &lt;- diamonds_joined %&gt;% 
+    mutate( filtered_proportion = filtered_count / cut_count)</code></pre>
+>>>>>>> b1f9ec698153fbd679374ebf8feb5a6fbe0f1494
 </div>
 </div>
 <div id="eda-6-points" class="section level1">
@@ -406,6 +411,7 @@ maxsale</code></pre>
 </div>
 <div id="answer-17" class="section level5">
 <h5>ANSWER:</h5>
+<<<<<<< HEAD
 <p>Variable proportion_missing in the vector Q_7_5_Answer answers this question.</p>
 <pre class="r"><code>grouped_city &lt;- txhousing %&gt;%group_by(city) %&gt;% summarise(sales_count = n())
 
@@ -453,6 +459,79 @@ sales_gt_500</code></pre>
 ## # ... with 1,873 more rows</code></pre>
 <pre class="r"><code>Q_7_6_answer &lt;- sales_gt_500 %&gt;% group_by(city)
 Q_7_6_answer</code></pre>
+<pre><code>## # A tibble: 1,883 x 9
+## # Groups:   city [14]
+##    city       year month sales   volume median listings inventory  date
+##    &lt;chr&gt;     &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1 Arlington  2000     8   507 60875199 103400     1417      3.50  2001
+##  2 Arlington  2001     5   536 69878959 114400     1592      3.70  2001
+##  3 Arlington  2001     6   534 67744182 108500     1627      3.80  2001
+##  4 Arlington  2001     8   505 65080743 113600     1616      3.70  2002
+##  5 Arlington  2002     5   503 67240236 116100     1741      3.90  2002
+##  6 Arlington  2002     7   509 66954143 119100     1925      4.40  2002
+##  7 Arlington  2003     5   502 67131982 118000     2544      5.90  2003
+##  8 Arlington  2003     7   524 73194692 123500     2799      6.50  2004
+##  9 Arlington  2003     8   531 72397143 123900     2801      6.40  2004
+## 10 Arlington  2004     5   527 72401436 118300     2922      6.50  2004
+## # ... with 1,873 more rows</code></pre>
+=======
+<p>Not elegant, a little brut force but the correct answer.</p>
+<pre class="r"><code>by_city &lt;- group_by(txhousing,city)
+summarise(by_city,
+  sales_count = n()) %&gt;% mutate(sales_count)</code></pre>
+<pre><code>## # A tibble: 46 x 2
+##    city                  sales_count
+##    &lt;chr&gt;                       &lt;int&gt;
+##  1 Abilene                       187
+##  2 Amarillo                      187
+##  3 Arlington                     187
+##  4 Austin                        187
+##  5 Bay Area                      187
+##  6 Beaumont                      187
+##  7 Brazoria County               187
+##  8 Brownsville                   187
+##  9 Bryan-College Station         187
+## 10 Collin County                 187
+## # ... with 36 more rows</code></pre>
+<pre class="r"><code>by_city2 &lt;- filter(txhousing,!is.na(sales)) %&gt;% group_by(city)
+summarise (by_city2, count2= n(), missing_sales = 187 - count2, prop_missing = missing_sales / count2)</code></pre>
+<pre><code>## # A tibble: 46 x 4
+##    city                  count2 missing_sales prop_missing
+##    &lt;chr&gt;                  &lt;int&gt;         &lt;dbl&gt;        &lt;dbl&gt;
+##  1 Abilene                  187          0          0     
+##  2 Amarillo                 187          0          0     
+##  3 Arlington                187          0          0     
+##  4 Austin                   187          0          0     
+##  5 Bay Area                 187          0          0     
+##  6 Beaumont                 187          0          0     
+##  7 Brazoria County          173         14.0        0.0809
+##  8 Brownsville              185          2.00       0.0108
+##  9 Bryan-College Station    187          0          0     
+## 10 Collin County            187          0          0     
+## # ... with 36 more rows</code></pre>
+<p><em>6. Looking at only the cities and months with greater than 500 sales: ◦Are the distributions of the median sales price (column name median), when grouped by city, different? The same? Show your work.</em> ◦Any cities that stand out that you’d want to investigate further? ◦Why might we want to filter out all cities and months with sales less than 500?</p>
+>>>>>>> b1f9ec698153fbd679374ebf8feb5a6fbe0f1494
+</div>
+<div id="answer-18" class="section level5">
+<h5>ANSWER:</h5>
+<pre class="r"><code>sales_gt_500 &lt;- filter(txhousing,sales &gt; 500)
+sales_gt_500</code></pre>
+<pre><code>## # A tibble: 1,883 x 9
+##    city       year month sales   volume median listings inventory  date
+##    &lt;chr&gt;     &lt;int&gt; &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1 Arlington  2000     8   507 60875199 103400     1417      3.50  2001
+##  2 Arlington  2001     5   536 69878959 114400     1592      3.70  2001
+##  3 Arlington  2001     6   534 67744182 108500     1627      3.80  2001
+##  4 Arlington  2001     8   505 65080743 113600     1616      3.70  2002
+##  5 Arlington  2002     5   503 67240236 116100     1741      3.90  2002
+##  6 Arlington  2002     7   509 66954143 119100     1925      4.40  2002
+##  7 Arlington  2003     5   502 67131982 118000     2544      5.90  2003
+##  8 Arlington  2003     7   524 73194692 123500     2799      6.50  2004
+##  9 Arlington  2003     8   531 72397143 123900     2801      6.40  2004
+## 10 Arlington  2004     5   527 72401436 118300     2922      6.50  2004
+## # ... with 1,873 more rows</code></pre>
+<pre class="r"><code>Q6_answer &lt;- sales_gt_500 %&gt;% group_by(city)
+Q6_answer</code></pre>
 <pre><code>## # A tibble: 1,883 x 9
 ## # Groups:   city [14]
 ##    city       year month sales   volume median listings inventory  date

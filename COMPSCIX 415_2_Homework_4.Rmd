@@ -1,0 +1,117 @@
+---
+title: "COMPSCIX 415.2 Homework 4"
+author: "Lionel Armstrong"
+date: "March 21, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Complete these Exercises: 
+Section 5.6.7: #2, #4, #5 and #6 only 
+
+*2. Come up with another approach that will give you the same output as not_cancelled %>% count(dest) and not_cancelled %>% count(tailnum, wt = distance) (without using count()).*
+
+#####ANSWER####
+
+*4. Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?*
+
+#####ANSWER####
+
+*5. Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights %>% group_by(carrier, dest) %>% summarise(n()))*
+
+#####ANSWER####
+
+*6. What does the sort argument to count() do. When might you use it?*
+
+
+
+
+
+
+
+Section 10.5: #1, #2, #3 and #6 only
+
+
+*1. How can you tell if an object is a tibble? (Hint: try printing mtcars, which is a regular data frame).*
+
+#####ANSWER####
+
+*2. Compare and contrast the following operations on a data.frame and equivalent tibble. What is different? Why might the default data frame behaviours cause you frustration?*
+
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+
+#####ANSWER####
+
+*3. If you have the name of a variable stored in an object, e.g. var <- "mpg", how can you extract the reference variable from a tibble?*
+
+#####ANSWER####
+
+*6. What option controls how many additional column names are printed at the footer of a tibble?*
+
+#####ANSWER####
+
+
+
+Section 12.3.3: #2, #3 and #4 only
+
+
+
+
+*2. Why does this code fail?*
+*table4a %>%* 
+  *gather(1999, 2000, key = "year", value = "cases")*
+*#> Error in combine_vars(vars, ind_list): Position must be between 0 and n*
+
+#####ANSWER####
+
+*3. Why does spreading this tibble fail? How could you add a new column to fix the problem?*
+*people <- tribble(*
+  *~name,             ~key,    ~value,*
+  *#-----------------|--------|------*
+  *"Phillip Woods",   "age",       45,*
+  *"Phillip Woods",   "height",   186,*
+  *"Phillip Woods",   "age",       50,*
+  *"Jessica Cordero", "age",       37,*
+  *"Jessica Cordero", "height",   156*
+  *)*
+
+#####ANSWER####
+
+
+*4. Tidy the simple tibble below. Do you need to spread or gather it? What are the variables?*
+*preg <- tribble(*
+   *~pregnant, ~male, ~female,*
+   *"yes",     NA,    10,*
+   *"no",      20,    12*
+  *)*
+
+#####ANSWER####
+
+Section 12.4.3: #1 and #2 only
+
+*1. What do the extra and fill arguments do in separate()? Experiment with the various options for the following two toy datasets.*
+
+*tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>%* 
+  *separate(x, c("one", "two", "three"))*
+
+*tibble(x = c("a,b,c", "d,e", "f,g,i")) %>%* 
+  *separate(x, c("one", "two", "three"))*
+  
+*2. Both unite() and separate() have a remove argument. What does it do? Why would you set it to FALSE?*
+
+#####ANSWER####
+
+
+Answer these questions: 
+Follow these steps: - Download the baby_names.txt ﬁle from Canvas which is in the Homework 4 assignment section. 
+
+- Load this ﬁle into R correctly and take a glimpse of the output. 
+- Export this ﬁle as an rds ﬁle and call it ‘baby_names.rds’. 
+- Reload the baby_names.rds ﬁle and take another glimpse. 
+- Show all of your code and the output. There should be two data import lines of code, one data export line of code, and two glimpses of the data.

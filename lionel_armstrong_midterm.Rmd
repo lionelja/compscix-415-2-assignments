@@ -197,9 +197,14 @@ filtered_diamonds <- diamonds %>% filter(price > 10000, carat < 1.5) %>%
 
 diamonds_joined <- grouped_diamonds %>% inner_join(filtered_diamonds, by = c("cut" = "cut"))
 
+<<<<<<< HEAD
 Q_6_3_Answer <- diamonds_joined %>% 
     mutate( filtered_proportion = filtered_count / cut_count)
 Q_6_3_Answer
+=======
+Q3_Answer <- diamonds_joined %>% 
+    mutate( filtered_proportion = filtered_count / cut_count)
+>>>>>>> b1f9ec698153fbd679374ebf8feb5a6fbe0f1494
 ```
 
 #EDA (6 points)  
@@ -258,6 +263,7 @@ ggplot(data = txhousing) +
 
 #####ANSWER:#####
 
+<<<<<<< HEAD
 Variable proportion_missing in the vector Q_7_5_Answer answers this question. 
 
 ```{r}
@@ -271,6 +277,18 @@ city_joined <- grouped_city %>% inner_join(filtered_city, by =c("city" ="city"))
 
 Q_7_5_Answer <- city_joined %>% mutate( missing_sales = sales_count - filtered_sales_count, proportion_missing = missing_sales / sales_count)
 Q_7_5_Answer
+=======
+Not elegant, a little brut force but the correct answer. 
+
+```{r}
+by_city <- group_by(txhousing,city)
+summarise(by_city,
+  sales_count = n()) %>% mutate(sales_count)
+
+by_city2 <- filter(txhousing,!is.na(sales)) %>% group_by(city)
+summarise (by_city2, count2= n(), missing_sales = 187 - count2, prop_missing = missing_sales / count2)
+
+>>>>>>> b1f9ec698153fbd679374ebf8feb5a6fbe0f1494
 ```
 
 
@@ -286,8 +304,13 @@ Q_7_5_Answer
 sales_gt_500 <- filter(txhousing,sales > 500)
 sales_gt_500
 
+<<<<<<< HEAD
 Q_7_6_answer <- sales_gt_500 %>% group_by(city)
 Q_7_6_answer
+=======
+Q6_answer <- sales_gt_500 %>% group_by(city)
+Q6_answer
+>>>>>>> b1f9ec698153fbd679374ebf8feb5a6fbe0f1494
 ```
 
 #Git and Github (1.5 points)  
