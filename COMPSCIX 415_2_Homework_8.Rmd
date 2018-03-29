@@ -29,7 +29,8 @@ library(dplyr)
 ```{r message=FALSE,message==FALSE}
 train_data <- read_csv('C:/Rdata/train_titanic.csv')
 
-
+# Change Survived to factor
+train_data <- train_data %>% mutate(Survived = as.factor(Survived) )
 ```
 
 #####ANSWER####
@@ -40,9 +41,13 @@ There are 891 observations and 12 variables in the
 
 *Our first step is to randomly split the data into train and test datasets. We will use a 70/30 split, and use the random seed of 29283 so that we all should get the same training and test set.*
 
-```{r}
+```{r message=FALSE}
 set.seed(29283)
-train_set <- train_data %>%sample_frac(.70,replace=FALSE)
+# Create train_set
+train_set <- train_data %>%sample_frac(.70,replace = FALSE)
+
+#Create test_set
+test_set <- train_data %>% filter(!(PassengerId%in% train_set$PassengerId))
 ```
 
 #Exercise 3#
@@ -56,15 +61,12 @@ train_set <- train_data %>%sample_frac(.70,replace=FALSE)
    *.Are these good features, given the problem we are trying to solve?*
 
 
-```{r}
+```{r message=FALSE}
 
-train_data2 <- train_data %>% mutate(Survived = case_when(
-  Survived ==  1 ~'Yes',
-  Survived ==  0 ~ 'No' 
-))
+#Create logistic regression model
+mod_3 <- glm(Survived ~ Pclass + Sex + Fare, data = train_data, family = 'binomial')
 
-glimpse(train_data2)
-mod_3 <- glm(Survived ~ Pclass + Sex + Fare, data = train_data)
+#Show model results
 tidy(mod_3)
 
 ```
@@ -102,12 +104,15 @@ tidy(mod_0)
    *.Does anything surprise you about the fitted tree?*
    
 #####ANSWER####
-A male passenger who paid a fare less than 26 had low probabity of surving as indicated in Node 3 boxplot.
+
+A female passenger who paid a fare less than 2.5 had high probabity of surving. The first split on sex results in all males being sorted to a termination node. That is, no further splits for males.
 
 ```{r}  
 tree_mod <- rpart(Survived ~ Pclass + Sex + Fare, data = train_data)
+summary(tree_mod)
 
 plot(as.party(tree_mod))  
+
 ```
 
 ####Exercise 5####
@@ -118,20 +123,24 @@ plot(as.party(tree_mod))
 *It may seem odd that we are using the same predict() function to make predictions for two completely different types of models (logistic regression and classification tree). This is a feature of R that there are many generic functions that you can apply to different R objects. Depending on the class of the object that is passed to the generic function, R will know which definition of the generic function to use on that object.*
 
 ```{r}
-test_logit <- predict(mod_1, newdata = test_set, type = 'response')
-test_tree <- predict(tree_mod, newdata = test_set)[,2]
+test_logit <- predict(mod_3, newdata = test_set, type = 'response')
+test_tree <- predict(tree_mod, newdata = test_set) [,2]
+glimpse(test_logit)
 ```
 
    *(a) Next, we will plot the ROC curves from both models using the code below. Don't just copy and paste the code. Go through it line by line and see what it is doing. Recall that predictions from your decision tree are given as a two column matrix.*
+   
 ```{r}
 # create the prediction objects for both models
 pred_logit <- prediction(predictions = test_logit, labels = test_set$Survived)
 pred_tree <- prediction(predictions = test_tree, labels = test_set$Survived)
 
+
 # get the FPR and TPR for the logistic model
 # recall that the ROC curve plots the FPR on the x-axis
 perf_logit <- performance(pred_logit, measure = 'tpr', x.measure = 'fpr')
 perf_logit_tbl <- tibble(perf_logit@x.values[[1]], perf_logit@y.values[[1]])
+
 
 # Change the names of the columns of the tibble
 names(perf_logit_tbl) <- c('fpr', 'tpr')
@@ -161,24 +170,83 @@ plot_roc(perf_tree_tbl)
 
 ```
 *b) Now, use the performance() function to calculate the area under the curve (AUC) for both ROC curves. Check ?performance for help on plugging in the right measure argument.
-```{r}
-# calculate the AUC
-auc_logit <- performance(______, measure = ____)
-auc_tree <- performance(_____, measure = ____)
 
+```{r message=FALSE}
+
+# calculate the AUC
+#?performance
+auc_logit <- performance(pred_logit, measure = 'tpr')
+auc_tree <- performance(pred_tree, measure = 'tpr')
+
+auc_logit
 # extract the AUC value
 auc_logit@y.values[[1]]
 auc_tree@y.values[[1]]
 ```
-*What do you notice about the ROC curves and the AUC values? Are the models performing well? Is the logistic regression model doing better, worse, or about the same as the classification tree?*
+
+*What do you notice about the ROC curves and the AUC values? Are the models performing well?*
+
+#ANSWER#
+
+The logistic regression ROC curve isn't as smooth as the classification tree curve, The classification modelis further There are many more y values for the logistic regression model.
+
+*Is the logistic regression model doing better, worse, or about the same as the classification tree?*
+
+#ANSWER#
+
+The logistic regression model isn't doing as well as the classification tree model
 
 *(c) Lastly, pick a probability cutoff by looking at the ROC curves. You pick, there's no right answer (but there is a wrong answer - make sure to pick something between 0 and 1). Using that probability cutoff, create the confusion matrix for each model by following these steps:*
 
    *1.Pick a cutoff value.*
+   
+####ANSWER####
+
+Selected cutoff rate is .67
 
    *2.Append the predicted probability values from each model (you created these at the beginning of Exercise 5) to your test_set tibble using mutate().*
 
+####ANSWER####
+
+```{r}
+test_set <- test_set %>% mutate (tree_prob = test_tree) %>% 
+  mutate (tree_cat = case_when (tree_prob < .67 ~ 'No',
+                                tree_prob >= .67 ~'Yes'))
+
+test_set <- test_set %>% mutate (logit_prob = test_logit) %>%
+   mutate (logit_cat = case_when (logit_prob < .67 ~ 'No',
+                                  logit_prob >= .67 ~'Yes'))
+glimpse(test_set)
+```
+
+
    *3.Create a new column for the predicted class from each model using mutate() and case_when(). Your new predicted class columns can have two possible values: yes or no which represents whether or not the passenger is predicted to have survived or not given the predicted probability.*
+
+####ANSWER####
+
+```{r}
+
+test_set <- test_set %>% mutate (tree_prob = test_tree) %>% 
+  mutate (tree_cat = case_when (tree_prob < .67 ~ 'No',
+                                tree_prob >= .67 ~'Yes'))
+
+test_set <- test_set %>% mutate (logit_prob = test_logit) %>%
+   mutate (logit_cat = case_when (logit_prob < .67 ~ 'No',
+                                  logit_prob >= .67 ~'Yes'))
+
+
+test_set <- test_set %>% mutate(tree_preds = pred_tree[,2]) %>% 
+  mutate(tree_preds_cat = case_when(tree_preds < .67 ~ 'No',
+                                    tree_preds >= .67 ~ 'Yes'))
+
+Heart %>% count(preds_cat)
+
+pred_logit <- prediction(predictions = test_logit, labels = test_set$Survived)
+pred_tree <- prediction(predictions = test_tree, labels = test_set$Survived)
+
+glimpse(test_set)
+```
+
    *4.You should now have 4 extra columns added to your test_set tibble, two columns of predicted probabilities, and two columns of the predicted categories based on your probability cutoff.*
 
    *5.Now create the table using the code below:*
