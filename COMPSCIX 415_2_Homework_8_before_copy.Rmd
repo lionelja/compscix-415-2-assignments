@@ -175,8 +175,8 @@ plot_roc(perf_tree_tbl)
 
 # calculate the AUC
 #?performance
-auc_logit <- performance(pred_logit, measure = 'auc')
-auc_tree <- performance(pred_tree, measure = 'auc')
+auc_logit <- performance(pred_logit, measure = 'tpr')
+auc_tree <- performance(pred_tree, measure = 'tpr')
 
 auc_logit
 # extract the AUC value
@@ -185,12 +185,16 @@ auc_tree@y.values[[1]]
 ```
 
 *What do you notice about the ROC curves and the AUC values? Are the models performing well?*
-*Is the logistic regression model doing better, worse, or about the same as the classification tree?*
-
 
 #ANSWER#
 
-Both models perform well as shown by their position towards the upper left corner.  The logistic regression model performs best. The rate of climb on the y-axis begins to slow around .25 which be a good cutoff point
+The logistic regression ROC curve isn't as smooth as the classification tree curve, The classification modelis further There are many more y values for the logistic regression model.
+
+*Is the logistic regression model doing better, worse, or about the same as the classification tree?*
+
+#ANSWER#
+
+The logistic regression model isn't doing as well as the classification tree model
 
 *(c) Lastly, pick a probability cutoff by looking at the ROC curves. You pick, there's no right answer (but there is a wrong answer - make sure to pick something between 0 and 1). Using that probability cutoff, create the confusion matrix for each model by following these steps:*
 
@@ -198,7 +202,7 @@ Both models perform well as shown by their position towards the upper left corne
    
 ####ANSWER####
 
-Selected cutoff rate is .25
+Selected cutoff rate is .67
 
    *2.Append the predicted probability values from each model (you created these at the beginning of Exercise 5) to your test_set tibble using mutate().*
 
@@ -206,12 +210,13 @@ Selected cutoff rate is .25
 
 ```{r}
 test_set <- test_set %>% mutate (tree_prob = test_tree) %>% 
-  mutate (tree_cat = case_when (tree_prob < .25 ~ 'No',
-                                tree_prob >= .25 ~'Yes'))
+  mutate (tree_cat = case_when (tree_prob < .67 ~ 'No',
+                                tree_prob >= .67 ~'Yes'))
 
 test_set <- test_set %>% mutate (logit_prob = test_logit) %>%
-   mutate (logit_cat = case_when (logit_prob < .25 ~ 'No',
-                                  logit_prob >= .25 ~'Yes'))
+   mutate (logit_cat = case_when (logit_prob < .67 ~ 'No',
+                                  logit_prob >= .67 ~'Yes'))
+glimpse(test_set)
 ```
 
 
@@ -221,25 +226,37 @@ test_set <- test_set %>% mutate (logit_prob = test_logit) %>%
 
 ```{r}
 
-#test_set <- test_set %>% mutate (tree_prob = test_tree) %>% 
-#  mutate (tree_cat = case_when (tree_prob < .25 ~ 'No',
-#                                tree_prob >= .25 ~'Yes'))
+test_set <- test_set %>% mutate (tree_prob = test_tree) %>% 
+  mutate (tree_cat = case_when (tree_prob < .67 ~ 'No',
+                                tree_prob >= .67 ~'Yes'))
 
-#test_set <- test_set %>% mutate (logit_prob = test_logit) %>%
-#   mutate (logit_cat = case_when (logit_prob < .25 ~ 'No',
-#                                  logit_prob >= .25 ~'Yes'))
+test_set <- test_set %>% mutate (logit_prob = test_logit) %>%
+   mutate (logit_cat = case_when (logit_prob < .67 ~ 'No',
+                                  logit_prob >= .67 ~'Yes'))
 
-#glimpse(test_set)
+
+test_set <- test_set %>% mutate(tree_preds = pred_tree[,2]) %>% 
+  mutate(tree_preds_cat = case_when(tree_preds < .67 ~ 'No',
+                                    tree_preds >= .67 ~ 'Yes'))
+
+Heart %>% count(preds_cat)
+
+pred_logit <- prediction(predictions = test_logit, labels = test_set$Survived)
+pred_tree <- prediction(predictions = test_tree, labels = test_set$Survived)
+
+glimpse(test_set)
 ```
 
    *4.You should now have 4 extra columns added to your test_set tibble, two columns of predicted probabilities, and two columns of the predicted categories based on your probability cutoff.*
 
    *5.Now create the table using the code below:*
 
-#ANSWER:#
-I couldn't figure out why the code below threw error object tree_cat not found when the glimpse function shows the object.  When I coded test_set$tree_cat the following error is thrown: Error in FUN(X[[i]], ...) : object 'No' not found. Please show correct code in your comments.
 ```{r}
-#class(test_set$tree_cat)
-#test_set %>% count(test_set$tree_cat, Survived) %>% spread(Survived, n)
-#test_set %>% count(logit_cat, Survived) %>% spread(Survived, n)
+test_set %>% count(_____, Survived) %>% spread(Survived, n)
+test_set %>% count(_____, Survived) %>% spread(Survived, n)
+
+## Logistic model:
+class_logit
+## Classification tree model:
+class_tree 
 ```
